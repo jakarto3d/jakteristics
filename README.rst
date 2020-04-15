@@ -2,8 +2,8 @@
 Jakteristics
 ~~~~~~~~~~~~
 
-Documentation: https://jakteristics.readthedocs.io
-Github: https://github.com/jakarto3d/jakteristics
+* **Documentation**: https://jakteristics.readthedocs.io
+* **Github**: https://github.com/jakarto3d/jakteristics
 
 Jarakteristics is a python package to compute point cloud geometric features. 
 
@@ -12,25 +12,27 @@ neighborhood. For example, a point located on a wall will have a high *planarity
 
 The features used in this package are described in the paper
 `Contour detection in unstructured 3D point clouds`_.
-They are based on the eigenvalues *λ1*, *λ2* and *λ3* and the eigenvectors *e1*, *e2* and *e3*.
+They are computed based on the eigenvalues and eigenvectors:
 
-* Eigenvalue sum : :math:`λ1 + λ2 + λ3`
-* Omnivariance: :math:`(λ1 \cdot λ2 \cdot λ3) ^ {1 / 3}`
-* Eigenentropy: :math:`-∑_{i=1}^3 λi  \cdot \ln(λi)`
-* Anisotropy: :math:`(λ1 − λ3)/λ1`
-* Planarity: :math:`(λ2−λ3)/λ1`
-* Linearity: :math:`(λ1−λ2)/λ1`
-* PCA1: :math:`λ1/(λ1 + λ2 + λ3)`
-* PCA2: :math:`λ2/(λ1 + λ2 + λ3)`
-* Surface Variation: :math:`λ3/(λ1+λ2+λ3)`
-* Sphericity: :math:`λ3/λ1`
-* Verticality: :math:`1-|e3[2]|`
-* Nx, Ny, Nz: The normal vector
+* Eigenvalue sum
+* Omnivariance
+* Eigenentropy
+* Anisotropy
+* Planarity
+* Linearity
+* PCA1
+* PCA2
+* Surface Variation
+* Sphericity
+* Verticality
+* Nx, Ny, Nz (The normal vector)
 
-It's inspired from a similar tool in CloudCompare.
+It's inspired from a similar tool in `CloudCompare <https://www.danielgm.net/cc/>`_.
 
 It can use multiple cpus, and the performance is quite good 
 (at least twice as fast as CloudCompare).
+
+.. _`Contour detection in unstructured 3D point clouds`: https://ethz.ch/content/dam/ethz/special-interest/baug/igp/photogrammetry-remote-sensing-dam/documents/pdf/timo-jan-cvpr2016.pdf
 
 
 Installation
@@ -70,5 +72,7 @@ Once the package is installed, you can use the `jakteristics` command:
 Run tests
 =========
 
-`python -m pip install -r requirements-dev.txt`
-`python setup.py pytest`
+.. code:: bash
+
+    python -m pip install -r requirements-dev.txt
+    python setup.py pytest

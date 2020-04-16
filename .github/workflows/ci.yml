@@ -5,9 +5,9 @@ name: Python package
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build:
@@ -16,19 +16,29 @@ jobs:
       matrix:
         python-version: [3.6, 3.7, 3.8]
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install
-      run: |
-        python -m pip install --upgrade pip
-        pip install .
-    - name: Test with pytest
-      run: |
-        pip install pytest
-        pytest
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install .
+      - name: Test with pytest
+        run: |
+          pip install -r requirements-dev.txt
+          pytest
+      - name: Build source wheel
+        run: |
+          python setup.py sdist_wheel
+      - name: Publish package
+        if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          user: __token__
+          password: ${{ secrets.TEST_PYPI_TOKEN }}
+          repository_url: https://test.pypi.org/legacy/
 
   build-windows:
     runs-on: windows-latest
@@ -36,16 +46,26 @@ jobs:
       matrix:
         python-version: [3.6, 3.7, 3.8]
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install
-      run: |
-        python -m pip install --upgrade pip
-        pip install .
-    - name: Test with pytest
-      run: |
-        pip install pytest
-        pytest
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install .
+      - name: Test with pytest
+        run: |
+          pip install -r requirements-dev.txt
+          pytest
+      - name: Build binary wheel
+        run: |
+          python setup.py bdist_wheel
+      - name: Publish package
+        if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          user: __token__
+          password: ${{ secrets.TEST_PYPI_TOKEN }}
+          repository_url: https://test.pypi.org/legacy/

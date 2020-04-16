@@ -91,6 +91,8 @@ def typer_main(
             raise typer.BadParameter(f"invalid choice: {name}. (choose from {choices})")
         feature_names_str.append(name)
 
+    output.parent.mkdir(parents=True, exist_ok=True)
+
     features = extension.compute_features(
         xyz,
         search_radius,

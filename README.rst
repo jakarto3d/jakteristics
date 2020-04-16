@@ -46,7 +46,7 @@ Installation
 Usage
 =====
 
-Refer to the `documentation <https://jakteristics.readthedocs.io/usage>`_ for more details.
+Refer to the `documentation <https://jakteristics.readthedocs.io/en/latest/usage.html>`_ for more details.
 
 
 From python

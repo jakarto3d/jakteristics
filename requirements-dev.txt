@@ -7,3 +7,4 @@ sphinx
 sphinx-autodoc-typehints
 sphinx-rtd-theme
 sphinx-click
+twine

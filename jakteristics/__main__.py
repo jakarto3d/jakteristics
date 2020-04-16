@@ -32,7 +32,7 @@ def typer_main(
     ),
     num_threads: int = Option(
         -1,
-        "--num_threads",
+        "--num-threads",
         "-t",
         help=(
             "The number of threads to use for computation. "

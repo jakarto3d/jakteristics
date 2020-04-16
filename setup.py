@@ -94,11 +94,11 @@ version = re.search(r"__version__ ?= ?['\"](.+)['\"]", about).group(1)
 setup(
     name="jakteristics",
     version=version,
-    description="Calcul des features d'un nuage de points, optimisé avec cython.",
+    description="Point cloud geometric properties from python.",
     long_description=readme + "\n\n" + history,
     author="David Caron",
     author_email="david.caron@jakarto.com",
-    # url='https://github.com/jakarto3d/jakteristics',
+    url="https://github.com/jakarto3d/jakteristics",
     packages=["jakteristics"],
     package_dir={"jakteristics": "jakteristics"},
     package_data={"": ["*.pyx", "*.pxd", "*.h", "*.cpp"]},

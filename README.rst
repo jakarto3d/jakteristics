@@ -29,8 +29,8 @@ They are computed based on the eigenvalues and eigenvectors:
 
 It's inspired from a similar tool in `CloudCompare <https://www.danielgm.net/cc/>`_.
 
-It can use multiple cpus, and the performance is quite good 
-(at least twice as fast as CloudCompare).
+It's implemented in cython using the BLAS and LAPACK scipy wrappers. It can use multiple cpus, 
+and the performance is quite good (at least twice as fast as CloudCompare).
 
 .. _`Contour detection in unstructured 3D point clouds`: https://ethz.ch/content/dam/ethz/special-interest/baug/igp/photogrammetry-remote-sensing-dam/documents/pdf/timo-jan-cvpr2016.pdf
 

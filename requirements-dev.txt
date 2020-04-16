@@ -2,9 +2,4 @@ wheel
 black
 pytest
 pytest-runner
-
-sphinx
-sphinx-autodoc-typehints
-sphinx-rtd-theme
-sphinx-click
 twine

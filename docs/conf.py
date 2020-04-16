@@ -13,7 +13,11 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath(".."))
+try:
+    import jakteristics
+except ImportError:
+    # if package is not installed, add the parent path
+    sys.path.insert(0, os.path.abspath(".."))
 
 
 # -- Project information -----------------------------------------------------
@@ -24,6 +28,8 @@ author = "David Caron"
 
 
 # -- General configuration ---------------------------------------------------
+
+master_doc = "index"
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom

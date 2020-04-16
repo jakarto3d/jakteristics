@@ -40,7 +40,14 @@ def read_las_xyz(
 def write_with_extra_dims(
     input_path: Path, output_path: Path, extra_dims: np.array, extra_dims_names: List,
 ):
-    """From an existing las file, create a new las file with extra dimensions"""
+    """From an existing las file, create a new las file with extra dimensions
+    
+    Arguments:
+        input_path: The input las file.
+        output_path: The output las file.
+        extra_dims: The numpy array containing geometric features.
+        extra_dims_names: A list of names corresponding to each column of `extra_dims`.
+    """
     if input_path == output_path:
         raise ValueError("Paths must not be the same")
 

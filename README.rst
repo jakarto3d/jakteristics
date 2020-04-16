@@ -5,7 +5,7 @@ Jakteristics
 * **Documentation**: https://jakteristics.readthedocs.io
 * **Github**: https://github.com/jakarto3d/jakteristics
 
-Jarakteristics is a python package to compute point cloud geometric features. 
+Jakteristics is a python package to compute point cloud geometric features. 
 
 A **geometric feature** is a description of the geometric shape around a point based on its 
 neighborhood. For example, a point located on a wall will have a high *planarity*.

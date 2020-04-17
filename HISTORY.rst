@@ -3,7 +3,7 @@
 History
 -------
 
-Unreleased
+0.4.1 (2020-04-17)
 ------------------
 
 * fix: create parent directories for output file

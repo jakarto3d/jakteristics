@@ -8,6 +8,7 @@ Unreleased
 
 * fix: create parent directories for output file
 * fix: rename --num_threads to --num-threads
+* fix: require laspy 1.7 for upper case names in extra dimensions
 
 
 0.4.0 (2020-04-16)

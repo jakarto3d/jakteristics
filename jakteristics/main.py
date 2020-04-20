@@ -2,7 +2,7 @@ from typing import List
 
 import numpy as np
 
-import jakteristics
+import jakteristics.extension
 from jakteristics.ckdtree import ckdtree
 
 from .constants import FEATURE_NAMES

@@ -120,5 +120,5 @@ setup(
     test_suite="tests",
     cmdclass=cmdclass,
     ext_modules=ext_modules,
-    entry_points={"console_scripts": ["jakteristics = jakteristics.__main__:main"]},
+    entry_points={"console_scripts": ["jakteristics = jakteristics.__main__:app"]},
 )

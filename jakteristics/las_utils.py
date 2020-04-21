@@ -51,14 +51,14 @@ def write_with_extra_dims(
     if input_path == output_path:
         raise ValueError("Paths must not be the same")
 
-    header = laspy.file.File(input_path, mode="r").header
-
-    if extra_dims.shape[0] != header.count:
-        raise ValueError(
-            "The features and point counts should be equal "
-            "{extra_dims.shape[0]} != {header.count}"
-        )
     with laspy.file.File(input_path, mode="r") as in_las:
+        header = in_las.header
+        if extra_dims.shape[0] != header.count:
+            raise ValueError(
+                f"The features and point counts should be equal "
+                f"{extra_dims.shape[0]} != {header.count}"
+            )
+
         with laspy.file.File(output_path, mode="w", header=in_las.header) as out_las:
             data = [(name, extra_dims[:, i]) for i, name in enumerate(extra_dims_names)]
 
@@ -89,6 +89,6 @@ def _get_las_data_type(array):
         # "S",  # strings not implemented
     ]
     type_ = str(array.dtype)
-    if type_ not in las_data_types:
+    if type_ not in las_data_types:  # pragma: no cover
         raise NotImplementedError(f"Array type not implemented: {type_}")
     return las_data_types.index(type_) + 1

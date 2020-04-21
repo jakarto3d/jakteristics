@@ -106,12 +106,8 @@ def typer_main(
     typer.echo(f"Done in {perf_counter() - t:0.2f} seconds.")
 
 
-def main():
-    app()
-
-
 # used for documentation
 click_command = typer.main.get_command(app)
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     app()

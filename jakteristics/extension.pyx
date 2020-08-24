@@ -50,7 +50,7 @@ def compute_features(
         uint32_t n_neighbors_at_id
         int thread_id
 
-        float [:, :] features = np.zeros((n_points, len(feature_names)), dtype=np.float32)
+        float [:, :] features = np.full((n_points, len(feature_names)), float("NaN"), dtype=np.float32)
 
         const np.float64_t[:, ::1] radius_vector
         np.float64_t p = 2 if euclidean_distance else 1
@@ -100,8 +100,7 @@ def compute_features(
             if n_neighbors_at_id > max_k_neighbors:
                 n_neighbors_at_id = max_k_neighbors
             elif n_neighbors_at_id == 0:
-                with gil:
-                    raise RuntimeError
+                continue
 
             for j in range(n_neighbors_at_id):
                 neighbor_id = threaded_vvres[thread_id][0][0][j]

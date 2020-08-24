@@ -130,3 +130,13 @@ def test_wrong_shape():
 
     with pytest.raises(ValueError):
         extension.compute_features(points, 0.15)
+
+
+def test_nan():
+    points = np.random.random((3, 1000)).T
+
+    # compute kdtree where points are not located
+    kdtree = jakteristics.cKDTree(points + 2)
+
+    features = jakteristics.compute_features(points, 0.15, kdtree=kdtree)
+    assert np.all(np.isnan(features))

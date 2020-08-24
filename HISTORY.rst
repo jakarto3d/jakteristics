@@ -3,10 +3,17 @@
 History
 -------
 
+Unreleased
+------------------
+
+* the default value when features can't be computed should be NaN
+
+
 0.4.2 (2020-04-20)
 ------------------
 
 * fix extension import statement
+
 
 0.4.1 (2020-04-17)
 ------------------

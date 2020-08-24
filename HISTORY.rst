@@ -3,7 +3,7 @@
 History
 -------
 
-Unreleased
+0.4.3 (2020-09-24)
 ------------------
 
 * the default value when features can't be computed should be NaN

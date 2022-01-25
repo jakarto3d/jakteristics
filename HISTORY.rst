@@ -6,7 +6,7 @@ History
 Unreleased
 ----------
 
-* fix: compatibility with lastest laspy version (>= 2.1.1, (2.1.0 have a bug))
+* fix: compatibility with latest laspy version (>= 2.1.1, (2.1.0 has a bug))
 
 
 0.4.3 (2020-09-24)

@@ -3,6 +3,12 @@
 History
 -------
 
+Unreleased
+----------
+
+* fix: compatibility with lastest laspy version (>= 2.1.1, (2.1.0 have a bug))
+
+
 0.4.3 (2020-09-24)
 ------------------
 

@@ -67,23 +67,3 @@ def write_with_extra_dims(
 
         with laspy.open(output_path, mode="w", header=las_data.header) as out_las:
             out_las.write_points(las_data.points)
-
-
-def _get_las_data_type(array):
-    las_data_types = [
-        "int8",
-        "uint8",
-        "int16",
-        "uint16",
-        "int32",
-        "uint32",
-        "int64",
-        "uint64",
-        "float32",
-        "float64",
-        # "S",  # strings not implemented
-    ]
-    type_ = str(array.dtype)
-    if type_ not in las_data_types:  # pragma: no cover
-        raise NotImplementedError(f"Array type not implemented: {type_}")
-    return las_data_types.index(type_) + 1

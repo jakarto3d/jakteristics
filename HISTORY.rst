@@ -6,6 +6,10 @@ History
 Unreleased
 ----------
 
+
+0.5.0 (2022-01-26)
+------------------
+
 * fix: compatibility with latest laspy version (>= 2.1.1, (2.1.0 has a bug))
 
 

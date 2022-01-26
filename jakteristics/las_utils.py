@@ -10,7 +10,7 @@ def read_las_xyz(
     filename: Union[str, Path], with_offset: bool = False
 ) -> Union[np.array, Tuple[np.ndarray, List[float]]]:
     """Reads xyz coordinates of a las file, optionally as single precision floating point.
-    
+
     Arguments:
         filename:
             The las file to read
@@ -34,10 +34,13 @@ def read_las_xyz(
 
 
 def write_with_extra_dims(
-    input_path: Path, output_path: Path, extra_dims: np.array, extra_dims_names: List,
+    input_path: Path,
+    output_path: Path,
+    extra_dims: np.array,
+    extra_dims_names: List,
 ):
     """From an existing las file, create a new las file with extra dimensions
-    
+
     Arguments:
         input_path: The input las file.
         output_path: The output las file.
@@ -56,7 +59,10 @@ def write_with_extra_dims(
             )
 
         data = [(name, extra_dims[:, i]) for i, name in enumerate(extra_dims_names)]
-        new_dimensions = [laspy.ExtraBytesParams(name=name, type=extra_dims.dtype, description=name) for name in extra_dims_names]
+        new_dimensions = [
+            laspy.ExtraBytesParams(name=name, type=extra_dims.dtype, description=name)
+            for name in extra_dims_names
+        ]
 
         # insert new data in previous pointcloud PackedPointRecord
         las_data = in_las.read()

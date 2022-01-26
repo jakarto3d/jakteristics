@@ -1,4 +1,3 @@
-
 FEATURE_NAMES = [
     "eigenvalue_sum",
     "omnivariance",

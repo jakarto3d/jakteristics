@@ -56,7 +56,7 @@ def write_with_extra_dims(
             )
 
         data = [(name, extra_dims[:, i]) for i, name in enumerate(extra_dims_names)]
-        new_dimensions = [laspy.ExtraBytesParams(**{"name": name, "type": array.dtype, "description": name}) for (name, array,) in data]
+        new_dimensions = [laspy.ExtraBytesParams(name=name, type=extra_dims.dtype, description=name) for name in extra_dims_names]
 
         # insert new data in previous pointcloud PackedPointRecord
         las_data = in_las.read()

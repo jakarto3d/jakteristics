@@ -54,7 +54,7 @@ def compute_features(
             distance to the real k-th nearest neighbor.
 
     Returns:
-        The computed features, one row per query point, and one column 
+        The computed features, one row per query point, and one column
         per requested feature.
     """
 

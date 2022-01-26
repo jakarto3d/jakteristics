@@ -105,11 +105,12 @@ def test_write_extra_dims(tmp_path):
     las_utils.write_with_extra_dims(input_path, output_path, features, FEATURE_NAMES)
 
     output_features = []
-    with laspy.file.File(output_path, mode="r") as las:
-        xyz_out = np.stack([las.x, las.y, las.z], axis=1)
-        for spec in las.reader.extra_dimensions:
-            name = spec.name.replace(b"\x00", b"").decode()
-            output_features.append(getattr(las, name))
+    with laspy.open(output_path, mode="r") as las:
+        las_data = las.read()
+        xyz_out = las_data.xyz
+        for spec in las.header.point_format.extra_dimensions:
+            name = spec.name.encode().replace(b"\x00", b"").decode()
+            output_features.append(getattr(las_data, name))
 
         output_features = np.vstack(output_features).T
 

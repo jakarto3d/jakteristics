@@ -21,7 +21,7 @@ def test_read_las_offset():
     xyz, offset = las_utils.read_las_xyz(input_file, with_offset=True)
     assert xyz.shape == (10310, 3)
     assert xyz.dtype == np.float32
-    assert offset == [362327.0, 5157620.0, 106.271]
+    assert np.allclose(offset, np.array([362327.0, 5157620.0, 106.271]))
 
 
 def test_write_extra_dims_same_path():

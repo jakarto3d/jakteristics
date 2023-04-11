@@ -105,7 +105,7 @@ def compute_features(
             for j in range(n_neighbors_at_id):
                 neighbor_id = threaded_vvres[thread_id][0][0][j]
                 for k in range(3):
-                    neighbor_points[k, thread_id * max_k_neighbors + j] = points[neighbor_id, k]
+                    neighbor_points[k, thread_id * max_k_neighbors + j] = kdtree.cself.raw_data[neighbor_id * 3 + k]
 
             utils.c_covariance(
                 neighbor_points[:, thread_id * max_k_neighbors:thread_id * max_k_neighbors + n_neighbors_at_id],

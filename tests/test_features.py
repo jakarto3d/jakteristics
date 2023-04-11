@@ -141,3 +141,14 @@ def test_nan():
 
     features = jakteristics.compute_features(points, 0.15, kdtree=kdtree)
     assert np.all(np.isnan(features))
+
+
+def test_with_kdtree_not_same_point_count():
+    points = np.random.random((3, 1000)).T
+
+    kdtree = jakteristics.cKDTree(points)
+    features = jakteristics.compute_features(points[::100], 0.30, kdtree=kdtree)
+
+    assert not np.any(np.isnan(features))
+
+    assert features.shape == (10, 14)

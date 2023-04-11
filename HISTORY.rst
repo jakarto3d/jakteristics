@@ -7,6 +7,12 @@ Unreleased
 ----------
 
 
+0.5.1 (2023-04-11)
+------------------
+
+* fix: computing features when kdtree is not built from the same points for which we want to compute the features
+* drop python 3.6, add wheels for python 3.7-3.11 on linux and windows
+
 0.5.0 (2022-01-26)
 ------------------
 

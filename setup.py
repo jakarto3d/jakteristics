@@ -11,6 +11,7 @@ import numpy
 LINUX = sys.platform == "linux"
 WINDOWS = sys.platform == "win32"
 
+
 # Avoid a gcc warning below:
 # cc1plus: warning: command line option ‘-Wstrict-prototypes’ is valid
 # for C/ObjC but not for C++
@@ -102,7 +103,7 @@ setup(
     packages=["jakteristics"],
     package_dir={"jakteristics": "jakteristics"},
     package_data={"": ["*.pyx", "*.pxd", "*.h", "*.cpp"]},
-    python_requires=">=3.6",
+    python_requires=">=3.7",
     install_requires=requirements,
     tests_require=["pytest"],
     license="BSD",

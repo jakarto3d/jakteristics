@@ -117,6 +117,7 @@ def compute_features(
             )
 
             compute_features_from_eigenvectors(
+                neighbor_points.shape[0],
                 eigenvalues[thread_id * 3 : thread_id * 3 + 3],
                 eigenvectors[:, thread_id * 3 : thread_id * 3 + 3],
                 features[i, :],
@@ -132,6 +133,7 @@ def compute_features(
 @cython.wraparound(False)
 @cython.cdivision(True)
 cdef inline void compute_features_from_eigenvectors(
+    int number_of_neighbors,
     double [:] eigenvalues,
     double [:, :] eigenvectors,
     float [:] out,
@@ -155,12 +157,13 @@ cdef inline void compute_features_from_eigenvectors(
 
     if out_map.count(b"l1"):
         out[out_map.at(b"l1")] = l1
-
     if out_map.count(b"l2"):
         out[out_map.at(b"l2")] = l2
-
     if out_map.count(b"l3"):
         out[out_map.at(b"l3")] = l3
+
+    if out_map.count(b"number_of_neighbors"):
+        out[out_map.at(b"number_of_neighbors")] = number_of_neighbors
 
     if out_map.count(b"eigenvalue_sum"):
         out[out_map.at(b"eigenvalue_sum")] = eigenvalue_sum

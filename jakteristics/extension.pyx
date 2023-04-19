@@ -207,14 +207,26 @@ cdef inline void compute_features_from_eigenvectors(
         if out_map.count(b"nz"):
             out[out_map.at(b"nz")] = n2 / norm
 
-    for index in range(3):
-        string_index = str(index + 1)
-        if out_map.count(f"eigenvector{string_index}x".encode("utf-8")):
-            out[out_map.at(f"eigenvector{string_index}x".encode("utf-8"))] = = eigenvectors[index, 0]
-        if out_map.count(f"eigenvector{string_index}y".encode("utf-8")):
-            out[out_map.at(f"eigenvector{string_index}y".encode("utf-8"))] = = eigenvectors[index, 1]
-        if out_map.count(f"eigenvector{string_index}z".encode("utf-8")):
-            out[out_map.at(f"eigenvector{string_index}z".encode("utf-8"))] = = eigenvectors[index, 2]
+    if out_map.count(b"eigenvector1x"):
+        out[out_map.at(b"eigenvector1x")] = eigenvectors[0, 0]
+    if out_map.count(b"eigenvector1y"):
+        out[out_map.at(b"eigenvector1y")] = eigenvectors[0, 1]
+    if out_map.count(b"eigenvector1z"):
+        out[out_map.at(b"eigenvector1z")] = eigenvectors[0, 2]
+
+    if out_map.count(b"eigenvector2x"):
+        out[out_map.at(b"eigenvector2x")] = eigenvectors[1, 0]
+    if out_map.count(b"eigenvector2y"):
+        out[out_map.at(b"eigenvector2y")] = eigenvectors[1, 1]
+    if out_map.count(b"eigenvector2z"):
+        out[out_map.at(b"eigenvector2z")] = eigenvectors[1, 2]
+
+    if out_map.count(b"eigenvector3x"):
+        out[out_map.at(b"eigenvector3x")] = eigenvectors[2, 0]
+    if out_map.count(b"eigenvector3y"):
+        out[out_map.at(b"eigenvector3y")] = eigenvectors[2, 1]
+    if out_map.count(b"eigenvector3z"):
+        out[out_map.at(b"eigenvector3z")] = eigenvectors[2, 2]
 
 
 cdef vector[np.intp_t] *** init_result_vectors(int num_threads):

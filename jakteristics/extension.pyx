@@ -244,3 +244,4 @@ cdef void free_result_vectors(vector[np.intp_t] *** threaded_vvres, int num_thre
                 del threaded_vvres[i][0]
             PyMem_Free(threaded_vvres[i])
         PyMem_Free(threaded_vvres)
+        

@@ -153,6 +153,15 @@ cdef inline void compute_features_from_eigenvectors(
     # Sum of eigenvalues equals the original variance of the data
     eigenvalue_sum = l1 + l2 + l3
 
+    if out_map.count(b"l1"):
+        out[out_map.at(b"l1")] = l1
+
+    if out_map.count(b"l2"):
+        out[out_map.at(b"l2")] = l2
+
+    if out_map.count(b"l3"):
+        out[out_map.at(b"l3")] = l3
+
     if out_map.count(b"eigenvalue_sum"):
         out[out_map.at(b"eigenvalue_sum")] = eigenvalue_sum
 
@@ -198,6 +207,15 @@ cdef inline void compute_features_from_eigenvectors(
         if out_map.count(b"nz"):
             out[out_map.at(b"nz")] = n2 / norm
 
+    for index in range(3):
+        string_index = str(index + 1)
+        if out_map.count(f"eigenvector{string_index}x".encode("utf-8")):
+            out[out_map.at(f"eigenvector{string_index}x".encode("utf-8"))] = = eigenvectors[index, 0]
+        if out_map.count(f"eigenvector{string_index}y".encode("utf-8")):
+            out[out_map.at(f"eigenvector{string_index}y".encode("utf-8"))] = = eigenvectors[index, 1]
+        if out_map.count(f"eigenvector{string_index}z".encode("utf-8")):
+            out[out_map.at(f"eigenvector{string_index}z".encode("utf-8"))] = = eigenvectors[index, 2]
+
 
 cdef vector[np.intp_t] *** init_result_vectors(int num_threads):
     """Allocate memory for result vectors, based on thread count"""
@@ -222,3 +240,4 @@ cdef void free_result_vectors(vector[np.intp_t] *** threaded_vvres, int num_thre
                 del threaded_vvres[i][0]
             PyMem_Free(threaded_vvres[i])
         PyMem_Free(threaded_vvres)
+        

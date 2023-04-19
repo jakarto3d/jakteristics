@@ -117,7 +117,7 @@ def compute_features(
             )
 
             compute_features_from_eigenvectors(
-                neighbor_points.shape[0],
+                neighbor_points.shape[1],
                 eigenvalues[thread_id * 3 : thread_id * 3 + 3],
                 eigenvectors[:, thread_id * 3 : thread_id * 3 + 3],
                 features[i, :],

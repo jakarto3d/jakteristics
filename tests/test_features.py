@@ -77,7 +77,7 @@ def test_compute_features():
 
     features = extension.compute_features(points, 0.15)
 
-    assert features.shape == (n_points, 14)
+    assert features.shape == (n_points, len(FEATURE_NAMES))
 
 
 def test_compute_some_features():
@@ -123,7 +123,7 @@ def test_not_contiguous():
 
     features = jakteristics.compute_features(points, 0.15)
 
-    assert features.shape == (1000, 14)
+    assert features.shape == (1000, len(FEATURE_NAMES))
 
 
 def test_wrong_shape():
@@ -151,4 +151,4 @@ def test_with_kdtree_not_same_point_count():
 
     assert not np.any(np.isnan(features))
 
-    assert features.shape == (10, 14)
+    assert features.shape == (10, len(FEATURE_NAMES))

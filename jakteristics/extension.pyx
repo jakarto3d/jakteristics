@@ -49,6 +49,7 @@ def compute_features(
         uint32_t neighbor_id
         uint32_t n_neighbors_at_id
         int thread_id
+        int number_of_neighbors
 
         float [:, :] features = np.full((n_points, len(feature_names)), float("NaN"), dtype=np.float32)
 
@@ -96,6 +97,7 @@ def compute_features(
             )
 
             n_neighbors_at_id = threaded_vvres[thread_id][0].size()
+            number_of_neighbors = n_neighbors_at_id
 
             if n_neighbors_at_id > max_k_neighbors:
                 n_neighbors_at_id = max_k_neighbors
@@ -117,7 +119,7 @@ def compute_features(
             )
 
             compute_features_from_eigenvectors(
-                neighbor_points.shape[1],
+                number_of_neighbors,
                 eigenvalues[thread_id * 3 : thread_id * 3 + 3],
                 eigenvectors[:, thread_id * 3 : thread_id * 3 + 3],
                 features[i, :],

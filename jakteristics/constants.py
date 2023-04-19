@@ -25,4 +25,5 @@ FEATURE_NAMES = [
     "nx",
     "ny",
     "nz",
+    "number_of_neighbors",
 ]

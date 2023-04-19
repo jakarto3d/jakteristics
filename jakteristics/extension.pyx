@@ -153,6 +153,17 @@ cdef inline void compute_features_from_eigenvectors(
     # Sum of eigenvalues equals the original variance of the data
     eigenvalue_sum = l1 + l2 + l3
 
+    if out_map.count(b"l1"):
+        out[out_map.at(b"l1")] = l1
+
+    if out_map.count(b"l2"):
+        out[out_map.at(b"l2")] = l2
+
+    if out_map.count(b"l3"):
+        out[out_map.at(b"l3")] = l3
+
+    
+
     if out_map.count(b"eigenvalue_sum"):
         out[out_map.at(b"eigenvalue_sum")] = eigenvalue_sum
 
@@ -197,6 +208,17 @@ cdef inline void compute_features_from_eigenvectors(
             out[out_map.at(b"ny")] = n1 / norm
         if out_map.count(b"nz"):
             out[out_map.at(b"nz")] = n2 / norm
+
+    if out_map.count(b"eigenvector1x"):
+        out[out_map.at(b"eigenvector1x")] = = eigenvectors[0, 0]
+
+    if out_map.count(b"eigenvector1y"):
+        out[out_map.at(b"eigenvector1y")] = = eigenvectors[0, 1]
+
+    if out_map.count(b"eigenvector1z"):
+        out[out_map.at(b"eigenvector1z")] = = eigenvectors[0, 2]
+
+    # TODO Implement other eigenvectors
 
 
 cdef vector[np.intp_t] *** init_result_vectors(int num_threads):

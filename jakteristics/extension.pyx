@@ -162,8 +162,6 @@ cdef inline void compute_features_from_eigenvectors(
     if out_map.count(b"l3"):
         out[out_map.at(b"l3")] = l3
 
-    
-
     if out_map.count(b"eigenvalue_sum"):
         out[out_map.at(b"eigenvalue_sum")] = eigenvalue_sum
 

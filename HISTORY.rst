@@ -7,6 +7,13 @@ Unreleased
 ----------
 
 
+0.6.0 (2023-04-20)
+------------------
+
+* add: number_of_neighbors feature
+* add: eigenvalues and eigenvectors features
+
+
 0.5.1 (2023-04-11)
 ------------------
 

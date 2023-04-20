@@ -39,7 +39,6 @@ def test_covariance():
 
 
 def test_eigenvalues():
-    """ write some tests """
     # --- given ---
     points = np.random.rand(3, 4).astype("d")
     np_cov = np.asfortranarray(np.cov(points).astype("d"))
@@ -75,7 +74,7 @@ def test_compute_features():
     n_points = 1000
     points = np.random.random((n_points, 3)) * 10
 
-    features = extension.compute_features(points, 0.15)
+    features = extension.compute_features(points, 0.15, feature_names=FEATURE_NAMES)
 
     assert features.shape == (n_points, len(FEATURE_NAMES))
 
@@ -84,7 +83,7 @@ def test_compute_some_features():
     input_path = data_dir / "test_0.02_seconde.las"
     xyz = las_utils.read_las_xyz(input_path)
     n_points = xyz.shape[0]
-    all_features = extension.compute_features(xyz, 0.15)
+    all_features = extension.compute_features(xyz, 0.15, feature_names=FEATURE_NAMES)
 
     for name in FEATURE_NAMES:
         features = extension.compute_features(xyz, 0.15, feature_names=[name])
@@ -100,7 +99,7 @@ def test_write_extra_dims(tmp_path):
 
     xyz = las_utils.read_las_xyz(input_path)
 
-    features = extension.compute_features(xyz, 0.15)
+    features = extension.compute_features(xyz, 0.15, feature_names=FEATURE_NAMES)
 
     las_utils.write_with_extra_dims(input_path, output_path, features, FEATURE_NAMES)
 
@@ -121,7 +120,7 @@ def test_write_extra_dims(tmp_path):
 def test_not_contiguous():
     points = np.random.random((3, 1000)).T
 
-    features = jakteristics.compute_features(points, 0.15)
+    features = jakteristics.compute_features(points, 0.15, feature_names=FEATURE_NAMES)
 
     assert features.shape == (1000, len(FEATURE_NAMES))
 
@@ -130,7 +129,7 @@ def test_wrong_shape():
     points = np.random.random((3, 1000))
 
     with pytest.raises(ValueError):
-        extension.compute_features(points, 0.15)
+        extension.compute_features(points, 0.15, feature_names=FEATURE_NAMES)
 
 
 def test_nan():
@@ -139,7 +138,9 @@ def test_nan():
     # compute kdtree where points are not located
     kdtree = jakteristics.cKDTree(points + 2)
 
-    features = jakteristics.compute_features(points, 0.15, kdtree=kdtree)
+    features = jakteristics.compute_features(
+        points, 0.15, kdtree=kdtree, feature_names=FEATURE_NAMES
+    )
     assert np.all(np.isnan(features))
 
 
@@ -147,7 +148,9 @@ def test_with_kdtree_not_same_point_count():
     points = np.random.random((3, 1000)).T
 
     kdtree = jakteristics.cKDTree(points)
-    features = jakteristics.compute_features(points[::100], 0.30, kdtree=kdtree)
+    features = jakteristics.compute_features(
+        points[::100], 0.30, kdtree=kdtree, feature_names=FEATURE_NAMES
+    )
 
     assert not np.any(np.isnan(features))
 

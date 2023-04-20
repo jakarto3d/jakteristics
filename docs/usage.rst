@@ -9,7 +9,8 @@ If your input is a las file, you can use the
 from your input file as a numpy array.
 
 If your input is already a numpy array, you can use the :py:func:`jakteristics.compute_features`
-directly. By default, every geometry feature will be computed.
+directly. By default, every geometry feature will be computed. In a future version, 
+the :py:arg:`feature_names` argument will be required.
 
 Once you have the features, you can use them like any numpy array, or write them
 to a las file using :py:func:`jakteristics.write_with_extra_dims`.
@@ -23,7 +24,7 @@ Example:
    input_path = "/path/to/a/las_file.las"
    xyz = las_utils.read_las_xyz(input_path)
 
-   features = compute_features(xyz, search_radius=0.15)
+   features = compute_features(xyz, search_radius=0.15, feature_names=FEATURE_NAMES)
 
    output_path = "/path/to/output_file.las"
    las_utils.write_with_extra_dims(input_path, output_path, features, FEATURE_NAMES)

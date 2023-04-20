@@ -56,7 +56,7 @@ From python
 
     from jakteristics import compute_features
 
-    features = compute_features(xyz, search_radius=0.15)
+    features = compute_features(xyz, search_radius=0.15, feature_names=['planarity', 'linearity'])
 
 
 CLI

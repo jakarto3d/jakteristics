@@ -1,4 +1,5 @@
-from typing import List
+from typing import List, Optional
+import warnings
 
 import numpy as np
 
@@ -16,7 +17,7 @@ def compute_features(
     num_threads: int = -1,
     max_k_neighbors: int = 50000,
     euclidean_distance: bool = True,
-    feature_names: List[str] = FEATURE_NAMES,
+    feature_names: Optional[List[str]] = None,
     eps: float = 0.0,
 ) -> np.ndarray:
     """
@@ -57,6 +58,13 @@ def compute_features(
         The computed features, one row per query point, and one column
         per requested feature.
     """
+
+    if feature_names is None:
+        warnings.warn(
+            "The `feature_names` argument of `compute_features` will be required "
+            "in a future version of jakteristics."
+        )
+        feature_names = FEATURE_NAMES
 
     points = np.ascontiguousarray(points)
 

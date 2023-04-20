@@ -157,12 +157,12 @@ cdef inline void compute_features_from_eigenvectors(
     # Sum of eigenvalues equals the original variance of the data
     eigenvalue_sum = l1 + l2 + l3
 
-    if out_map.count(b"l1"):
-        out[out_map.at(b"l1")] = l1
-    if out_map.count(b"l2"):
-        out[out_map.at(b"l2")] = l2
-    if out_map.count(b"l3"):
-        out[out_map.at(b"l3")] = l3
+    if out_map.count(b"eigenvalue1"):
+        out[out_map.at(b"eigenvalue1")] = l1
+    if out_map.count(b"eigenvalue2"):
+        out[out_map.at(b"eigenvalue2")] = l2
+    if out_map.count(b"eigenvalue3"):
+        out[out_map.at(b"eigenvalue3")] = l3
 
     if out_map.count(b"number_of_neighbors"):
         out[out_map.at(b"number_of_neighbors")] = number_of_neighbors

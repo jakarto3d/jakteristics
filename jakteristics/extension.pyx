@@ -49,6 +49,7 @@ def compute_features(
         uint32_t neighbor_id
         uint32_t n_neighbors_at_id
         int thread_id
+        int number_of_neighbors
 
         float [:, :] features = np.full((n_points, len(feature_names)), float("NaN"), dtype=np.float32)
 
@@ -96,6 +97,7 @@ def compute_features(
             )
 
             n_neighbors_at_id = threaded_vvres[thread_id][0].size()
+            number_of_neighbors = n_neighbors_at_id
 
             if n_neighbors_at_id > max_k_neighbors:
                 n_neighbors_at_id = max_k_neighbors
@@ -117,6 +119,7 @@ def compute_features(
             )
 
             compute_features_from_eigenvectors(
+                number_of_neighbors,
                 eigenvalues[thread_id * 3 : thread_id * 3 + 3],
                 eigenvectors[:, thread_id * 3 : thread_id * 3 + 3],
                 features[i, :],
@@ -132,6 +135,7 @@ def compute_features(
 @cython.wraparound(False)
 @cython.cdivision(True)
 cdef inline void compute_features_from_eigenvectors(
+    int number_of_neighbors,
     double [:] eigenvalues,
     double [:, :] eigenvectors,
     float [:] out,
@@ -155,13 +159,13 @@ cdef inline void compute_features_from_eigenvectors(
 
     if out_map.count(b"eigenvalue1"):
         out[out_map.at(b"eigenvalue1")] = l1
-
     if out_map.count(b"eigenvalue2"):
         out[out_map.at(b"eigenvalue2")] = l2
-
     if out_map.count(b"eigenvalue3"):
         out[out_map.at(b"eigenvalue3")] = l3
 
+    if out_map.count(b"number_of_neighbors"):
+        out[out_map.at(b"number_of_neighbors")] = number_of_neighbors
 
     if out_map.count(b"eigenvalue_sum"):
         out[out_map.at(b"eigenvalue_sum")] = eigenvalue_sum

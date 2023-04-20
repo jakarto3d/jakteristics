@@ -13,7 +13,6 @@ FEATURE_NAMES = [
     "nx",
     "ny",
     "nz",
-    "number_of_neighbors",
     "eigenvalue1",
     "eigenvalue2",
     "eigenvalue3",

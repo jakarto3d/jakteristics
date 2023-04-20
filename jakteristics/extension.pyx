@@ -153,6 +153,16 @@ cdef inline void compute_features_from_eigenvectors(
     # Sum of eigenvalues equals the original variance of the data
     eigenvalue_sum = l1 + l2 + l3
 
+    if out_map.count(b"eigenvalue1"):
+        out[out_map.at(b"eigenvalue1")] = l1
+
+    if out_map.count(b"eigenvalue2"):
+        out[out_map.at(b"eigenvalue2")] = l2
+
+    if out_map.count(b"eigenvalue3"):
+        out[out_map.at(b"eigenvalue3")] = l3
+
+
     if out_map.count(b"eigenvalue_sum"):
         out[out_map.at(b"eigenvalue_sum")] = eigenvalue_sum
 
@@ -198,6 +208,27 @@ cdef inline void compute_features_from_eigenvectors(
         if out_map.count(b"nz"):
             out[out_map.at(b"nz")] = n2 / norm
 
+    if out_map.count(b"eigenvector1x"):
+        out[out_map.at(b"eigenvector1x")] = eigenvectors[0, 0]
+    if out_map.count(b"eigenvector1y"):
+        out[out_map.at(b"eigenvector1y")] = eigenvectors[0, 1]
+    if out_map.count(b"eigenvector1z"):
+        out[out_map.at(b"eigenvector1z")] = eigenvectors[0, 2]
+
+    if out_map.count(b"eigenvector2x"):
+        out[out_map.at(b"eigenvector2x")] = eigenvectors[1, 0]
+    if out_map.count(b"eigenvector2y"):
+        out[out_map.at(b"eigenvector2y")] = eigenvectors[1, 1]
+    if out_map.count(b"eigenvector2z"):
+        out[out_map.at(b"eigenvector2z")] = eigenvectors[1, 2]
+
+    if out_map.count(b"eigenvector3x"):
+        out[out_map.at(b"eigenvector3x")] = eigenvectors[2, 0]
+    if out_map.count(b"eigenvector3y"):
+        out[out_map.at(b"eigenvector3y")] = eigenvectors[2, 1]
+    if out_map.count(b"eigenvector3z"):
+        out[out_map.at(b"eigenvector3z")] = eigenvectors[2, 2]
+
 
 cdef vector[np.intp_t] *** init_result_vectors(int num_threads):
     """Allocate memory for result vectors, based on thread count"""
@@ -222,3 +253,4 @@ cdef void free_result_vectors(vector[np.intp_t] *** threaded_vvres, int num_thre
                 del threaded_vvres[i][0]
             PyMem_Free(threaded_vvres[i])
         PyMem_Free(threaded_vvres)
+        

@@ -12,6 +12,7 @@ from .constants import FEATURE_NAMES
 def compute_features(
     points: np.ndarray,
     search_radius: float,
+    max_graph_edge_length: float = np.inf,
     *,
     kdtree: ckdtree.cKDTree = None,
     num_threads: int = -1,
@@ -28,6 +29,8 @@ def compute_features(
             A contiguous (n, 3) array of xyz coordinates to query.
         search_radius:
             The radius to query neighbors at each point.
+        max_graph_edge_length:
+            TODO Add description.
         kdtree:
             If None, the kdtree is computed from the list of points.
             Must be an instance of `jakteristics.cKDTree`
@@ -71,6 +74,7 @@ def compute_features(
     return jakteristics.extension.compute_features(
         points,
         search_radius,
+        max_graph_edge_length=max_graph_edge_length,
         kdtree=kdtree,
         num_threads=num_threads,
         max_k_neighbors=max_k_neighbors,

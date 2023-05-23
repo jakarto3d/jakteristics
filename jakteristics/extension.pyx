@@ -34,7 +34,7 @@ INFINITY = np.inf
 def compute_features(
     double [:, ::1] points,
     double search_radius,
-    double max_graph_edge_length=INFINITY, # TODO Check for backwards compatibility.
+    double max_graph_edge_length=INFINITY,
     *,
     cKDTree kdtree=None,
     int num_threads=-1,
@@ -65,11 +65,11 @@ def compute_features(
         vector[np.intp_t] *** threaded_vvres
         int return_length = int(False)
 
-        bint graph_distance
+        bint compute_graph_distance
         unsigned int start_node_id, max_edge_weight_count, neighbor_point_id_offset, row, column, coordinate_index, edge_weight_id, threshold_length, row_index, path_index
         double edge_weight
         # TODO Check whether continous arrays make more sense.
-        double [:, :] edge_weights, edge_vector, shortest_paths_weights, new_array
+        double [:, :] edge_weights, edge_vector, shortest_edge_weights, new_array
         unsigned int [:, :] over_threshold_indices
 
     if not points.shape[1] == 3:
@@ -91,9 +91,9 @@ def compute_features(
     eigenvectors = np.zeros([3, 3 * num_threads], dtype=np.float64, order="F")
     eigenvalues = np.zeros(3 * num_threads, dtype=np.float64)
 
-    graph_distance = <bint> (max_graph_edge_length < search_radius)
+    compute_graph_distance = <bint> (max_graph_edge_length < search_radius)
 
-    if graph_distance:
+    if compute_graph_distance:
         # max edge weight count equals (n²-n)/2 (similar to nth triangular number), where n is the number of points, because
         # n² : every node has an edge with every node
         # -n : edge between point a-a, b-b et cetera is always zero and redundant
@@ -102,7 +102,7 @@ def compute_features(
 
         edge_weights = np.empty((num_threads, max_edge_weight_count), dtype=np.float64)
         edge_vector = np.empty((num_threads, 3), dtype=np.float64)
-        shortest_paths_weights = np.empty((num_threads, max_k_neighbors), dtype=np.float64)
+        shortest_edge_weights = np.empty((num_threads, max_k_neighbors), dtype=np.float64)
         over_threshold_indices = np.empty((num_threads, max_k_neighbors), dtype=np.uint32)
         new_array = np.empty((num_threads, max_k_neighbors), dtype=np.float64) # TODO Find better name
 
@@ -138,8 +138,7 @@ def compute_features(
                 for k in range(3):
                     neighbor_points[k, neighbor_point_id_offset + j] = kdtree.cself.raw_data[neighbor_id * 3 + k]
 
-            if graph_distance:
-                
+            if compute_graph_distance:
                 # TODO Check why this is setting every weight twice.
                 for row in range(n_neighbors_at_id):
                     for column in range(n_neighbors_at_id):
@@ -167,18 +166,18 @@ def compute_features(
                         
                         edge_weights[thread_id, edge_weight_id] = edge_weight
 
-                # TODO This is weird. Would be great if [0] is the start node.
+                # TODO This is weird. Would be great if [0] is the start node in the first place.
                 for start_node_id in range(n_neighbors_at_id):
                     if (neighbor_points[0, neighbor_point_id_offset + start_node_id] == points[i, 0] and
                         neighbor_points[1, neighbor_point_id_offset + start_node_id] == points[i, 1] and
                         neighbor_points[2, neighbor_point_id_offset + start_node_id] == points[i, 2]):
                         break
 
-                shortest_paths_weights[thread_id, :n_neighbors_at_id] = dijkstra_all_pairs_shortest_path(start_node_id, edge_weights[thread_id, :], n_neighbors_at_id)
+                shortest_edge_weights[thread_id, :n_neighbors_at_id] = dijkstra_all_shortest_edge_weights(start_node_id, edge_weights[thread_id, :], n_neighbors_at_id)
 
                 threshold_length = 0
                 for path_index in range(n_neighbors_at_id):
-                    if shortest_paths_weights[thread_id, path_index] > search_radius:
+                    if shortest_edge_weights[thread_id, path_index] > search_radius:
                         over_threshold_indices[thread_id, threshold_length] = path_index
                         threshold_length = threshold_length + 1
 
@@ -186,7 +185,7 @@ def compute_features(
                 number_of_neighbors = number_of_neighbors - threshold_length
 
                 for k in range(3):
-                    neighbor_points[k, neighbor_point_id_offset : neighbor_point_id_offset + n_neighbors_at_id] = pop(
+                    neighbor_points[k, neighbor_point_id_offset : neighbor_point_id_offset + n_neighbors_at_id] = move_to_end(
                         new_array[thread_id, :n_neighbors_at_id],
                         neighbor_points[k, neighbor_point_id_offset : neighbor_point_id_offset + n_neighbors_at_id + threshold_length],
                         over_threshold_indices[thread_id, :threshold_length])
@@ -211,29 +210,29 @@ def compute_features(
     finally:
         free_result_vectors(threaded_vvres, num_threads)
 
-    return np.asarray(features)
+    return np.array(features)
 
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
 @cython.initializedcheck(False)
 @cython.cdivision(True)
-cdef inline double[:] pop(double[:] new_array, double[:] array, unsigned int[:] indices) nogil:
-    cdef bint pop
+cdef inline double[:] move_to_end(double[:] new_array, double[:] array, unsigned int[:] indices_to_move) nogil:
+    cdef bint move
     cdef unsigned int array_length, indices_length, new_array_index
     array_length = array.shape[0]
-    indices_length = indices.shape[0]
+    indices_length = indices_to_move.shape[0]
     new_array_index = 0
 
     for array_index in range(array_length):
 
-        pop = <bint> False
+        move = <bint> False
         for indices_index in range(indices_length):
-            if array_index == indices[indices_index]:
-                pop = <bint> True
+            if array_index == indices_to_move[indices_index]:
+                move = <bint> True
                 break
 
-        if not pop:
+        if not move:
             new_array[new_array_index] = array[array_index]
             new_array_index = new_array_index + 1
 
@@ -244,27 +243,27 @@ cdef inline double[:] pop(double[:] new_array, double[:] array, unsigned int[:] 
 @cython.wraparound(False)
 @cython.initializedcheck(False)
 @cython.cdivision(True)
-cdef inline double[:] dijkstra_all_pairs_shortest_path(unsigned int start_node_id, double[:] weights, unsigned int node_count) nogil:
-    cdef double* distances
-    distances = <double*> malloc(<size_t>(node_count * sizeof(double)))
+cdef inline double[:] dijkstra_all_shortest_edge_weights(unsigned int start_node_id, double[:] edge_weights, unsigned int node_count) nogil:
+    cdef double* shortest_edges_weights
+    shortest_edges_weights = <double*> malloc(<size_t>(node_count * sizeof(double)))
     cdef bint* queue
     queue = <bint*> malloc(<size_t>(node_count * sizeof(bint)))
     cdef unsigned int queue_size
     queue_size = node_count
 
-    cdef double candidate_length, candidate_distance
+    cdef double candidate_weight, candidate_distance
     cdef unsigned int node_id, queue_node_id, candidate_node_id, row, column, edge_weight_id, row_index
 
     for node_id in range(node_count):
-        distances[node_id] = INFINITY
+        shortest_edges_weights[node_id] = INFINITY
         queue[node_id] = True
-    distances[start_node_id] = 0
+    shortest_edges_weights[start_node_id] = 0
 
     while queue_size > 0:
 
         min_distance = INFINITY
         for node_id in range(node_count):
-            candidate_distance = distances[node_id]
+            candidate_distance = shortest_edges_weights[node_id]
             if queue[node_id] and candidate_distance <= min_distance:
                 queue_node_id = node_id
                 min_distance = candidate_distance
@@ -283,19 +282,18 @@ cdef inline double[:] dijkstra_all_pairs_shortest_path(unsigned int start_node_i
                     edge_weight_id = edge_weight_id + row_index
                 edge_weight_id = edge_weight_id + column - row
 
-                candidate_length = distances[queue_node_id] + weights[edge_weight_id]
-                if candidate_length < distances[candidate_node_id]:
-                    distances[candidate_node_id] = candidate_length
+                candidate_weight = shortest_edges_weights[queue_node_id] + edge_weights[edge_weight_id]
+                if candidate_weight < shortest_edges_weights[candidate_node_id]:
+                    shortest_edges_weights[candidate_node_id] = candidate_weight
 
     free(queue)
  
-    # This code does not return the weights.
-    # It only reuses the allocated memory to return the distances.
+    # Reusing the allocated memory.
     # TODO Check whether this is a good 'Cythonic' practice.
     for i in range(node_count):
-        weights[i] = distances[i]
-    free(distances)
-    return weights[:node_count]
+        edge_weights[i] = shortest_edges_weights[i]
+    free(shortest_edges_weights)
+    return edge_weights[:node_count]
 
 
 @cython.boundscheck(False)

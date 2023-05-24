@@ -64,11 +64,10 @@ def compute_features(
         int return_length = int(False)
 
         bint compute_graph_distance
-        unsigned int start_node_id, max_edge_weight_count, neighbor_point_id_offset, row, column, coordinate_index, edge_weight_id, threshold_length, row_index, path_index
+        unsigned int start_node_id, max_edge_weight_count, neighbor_point_id_offset, row, column, coordinate_index, edge_weight_id, threshold_length, path_index
         double edge_weight
-        # TODO Check whether continous arrays make more sense.
-        double [:, :] edge_weights, edge_vector, shortest_edge_weights, new_array
-        unsigned int [:, :] over_threshold_indices
+        double [:, ::1] edge_weights, edge_vector, shortest_edge_weights, new_array
+        unsigned int [:, ::1] over_threshold_indices
 
     if not points.shape[1] == 3:
         raise ValueError("You must provide an (n x 3) numpy array.")
@@ -137,7 +136,6 @@ def compute_features(
                     neighbor_points[k, neighbor_point_id_offset + j] = kdtree.cself.raw_data[neighbor_id * 3 + k]
 
             if compute_graph_distance:
-                # TODO Check why this is setting every weight twice.
                 for row in range(n_neighbors_at_id):
                     for column in range(n_neighbors_at_id):
 
@@ -148,16 +146,14 @@ def compute_features(
                             edge_vector[thread_id, coordinate_index] = (neighbor_points[coordinate_index, neighbor_point_id_offset + row]
                                                                         - neighbor_points[coordinate_index, neighbor_point_id_offset + column])
 
-                        edge_weight_id = (row * (row + 1)) // 2 + (column - row) # sum of an arithmetic series
-
-                        # TODO Squared Euclidean norm instead of 'normal' Euclidean norm for better performance (probably won't work).
                         edge_weight = sqrt(edge_vector[thread_id, 0] * edge_vector[thread_id, 0]
                                             + edge_vector[thread_id, 1] * edge_vector[thread_id, 1]
                                             + edge_vector[thread_id, 2] * edge_vector[thread_id, 2])
 
                         if edge_weight > max_graph_edge_length:
                             edge_weight = INFINITY
-                        
+
+                        edge_weight_id = (row * (row + 1)) // 2 + (column - row) # sum of an arithmetic series        
                         edge_weights[thread_id, edge_weight_id] = edge_weight
 
                 # TODO This is weird. Would be great if [0] is the start node in the first place.

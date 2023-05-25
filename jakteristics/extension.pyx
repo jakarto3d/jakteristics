@@ -151,9 +151,9 @@ def compute_features(
                                                 + edge_vector[thread_id, 1] * edge_vector[thread_id, 1]
                                                 + edge_vector[thread_id, 2] * edge_vector[thread_id, 2])
                         else: # Manhattan distance.
-                            edge_weight = (abs(edge_vector[thread_id, 0])
-                                            + abs(edge_vector[thread_id, 1])
-                                            + abs(edge_vector[thread_id, 2]))
+                            edge_weight = (fabs(edge_vector[thread_id, 0])
+                                            + fabs(edge_vector[thread_id, 1])
+                                            + fabs(edge_vector[thread_id, 2]))
 
                         if edge_weight > max_graph_edge_length:
                             edge_weight = INFINITY

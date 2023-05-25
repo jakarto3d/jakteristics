@@ -30,7 +30,11 @@ def compute_features(
         search_radius:
             The radius to query neighbors at each point.
         max_graph_edge_length:
-            TODO Add description.
+            The maximum single edge length for computing the geodesic graph distance.
+            The geodesic graph distance will only be calculated if
+            `max_graph_edge_length < search_radius`; otherwise only "classic" Euclidean
+            or Manhattan distance is used for the neighborhood search (can be changed with
+            parameter `euclidean_distance`).
         kdtree:
             If None, the kdtree is computed from the list of points.
             Must be an instance of `jakteristics.cKDTree`

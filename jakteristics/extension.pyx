@@ -146,9 +146,14 @@ def compute_features(
                             edge_vector[thread_id, coordinate_index] = (neighbor_points[coordinate_index, neighbor_point_id_offset + row]
                                                                         - neighbor_points[coordinate_index, neighbor_point_id_offset + column])
 
-                        edge_weight = sqrt(edge_vector[thread_id, 0] * edge_vector[thread_id, 0]
-                                            + edge_vector[thread_id, 1] * edge_vector[thread_id, 1]
-                                            + edge_vector[thread_id, 2] * edge_vector[thread_id, 2])
+                        if euclidean_distance:
+                            edge_weight = sqrt(edge_vector[thread_id, 0] * edge_vector[thread_id, 0]
+                                                + edge_vector[thread_id, 1] * edge_vector[thread_id, 1]
+                                                + edge_vector[thread_id, 2] * edge_vector[thread_id, 2])
+                        else: # Manhattan distance.
+                            edge_weight = (abs(edge_vector[thread_id, 0])
+                                            + abs(edge_vector[thread_id, 1])
+                                            + abs(edge_vector[thread_id, 2]))
 
                         if edge_weight > max_graph_edge_length:
                             edge_weight = INFINITY
@@ -163,7 +168,7 @@ def compute_features(
                         neighbor_points[2, neighbor_point_id_offset + start_node_id] == points[i, 2]):
                         break
 
-                shortest_edge_weights[thread_id, :n_neighbors_at_id] = dijkstra_all_shortest_edge_weights(start_node_id, edge_weights[thread_id, :], n_neighbors_at_id)
+                shortest_edge_weights[thread_id, :n_neighbors_at_id] = dijkstra_all_shortest_edge_paths_weights(start_node_id, edge_weights[thread_id, :], n_neighbors_at_id)
 
                 threshold_length = 0
                 for path_index in range(n_neighbors_at_id):
@@ -233,7 +238,7 @@ cdef inline double[:] move_to_end(double[:] new_array, double[:] array, unsigned
 @cython.wraparound(False)
 @cython.initializedcheck(False)
 @cython.cdivision(True)
-cdef inline double[:] dijkstra_all_shortest_edge_weights(unsigned int start_node_id, double[:] edge_weights, unsigned int node_count) nogil:
+cdef inline double[:] dijkstra_all_shortest_edge_paths_weights(unsigned int start_node_id, double[:] edge_weights, unsigned int node_count) nogil:
     cdef double* shortest_edges_weights
     shortest_edges_weights = <double*> malloc(<size_t>(node_count * sizeof(double)))
     cdef bint* queue

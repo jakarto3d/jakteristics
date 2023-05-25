@@ -79,6 +79,17 @@ def test_compute_features():
     assert features.shape == (n_points, len(FEATURE_NAMES))
 
 
+def test_compute_features_graph_geodesic():
+    n_points = 1000
+    points = np.random.random((n_points, 3)) * 10
+
+    features = extension.compute_features(
+        points, 0.15, max_graph_edge_length=0.5, feature_names=FEATURE_NAMES
+    )
+
+    assert features.shape == (n_points, len(FEATURE_NAMES))
+
+
 def test_compute_some_features():
     input_path = data_dir / "test_0.02_seconde.las"
     xyz = las_utils.read_las_xyz(input_path)

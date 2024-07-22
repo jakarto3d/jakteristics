@@ -61,3 +61,10 @@ jobs:
           python setup.py sdist
           twine upload dist/*
           twine upload wheelhouse/*.whl
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*
+            wheelhouse/*.whl

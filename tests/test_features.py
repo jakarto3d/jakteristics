@@ -136,7 +136,7 @@ def test_nan():
     points = np.random.random((3, 1000)).T
 
     # compute kdtree where points are not located
-    kdtree = jakteristics.cKDTree(points + 2)
+    kdtree = jakteristics.cKDTree((points + 2).copy())
 
     features = jakteristics.compute_features(
         points, 0.15, kdtree=kdtree, feature_names=FEATURE_NAMES
@@ -147,7 +147,7 @@ def test_nan():
 def test_with_kdtree_not_same_point_count():
     points = np.random.random((3, 1000)).T
 
-    kdtree = jakteristics.cKDTree(points)
+    kdtree = jakteristics.cKDTree((points).copy())
     features = jakteristics.compute_features(
         points[::100], 0.30, kdtree=kdtree, feature_names=FEATURE_NAMES
     )

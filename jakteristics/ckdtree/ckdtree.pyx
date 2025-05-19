@@ -10,9 +10,9 @@ import numpy as np
 import scipy.sparse
 
 cimport numpy as np
-from numpy.math cimport INFINITY
 
 from cpython.mem cimport PyMem_Malloc, PyMem_Realloc, PyMem_Free
+from libc.math cimport INFINITY
 from libc.string cimport memset, memcpy
 from libcpp.vector cimport vector
 from libcpp.algorithm cimport sort
